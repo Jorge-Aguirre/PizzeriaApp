@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzeriaApp", "PizzeriaApp\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessDomain", "BusinessDomain\BusinessDomain.csproj", "{5B976CA6-2180-4362-A6D4-85E1021F817F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseRepository", "DatabaseRepository\DatabaseRepository.csproj", "{232A9EF9-2691-48AD-A42B-51A5BCED048B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzeriaConsole", "PizzeriaConsole\PizzeriaConsole.csproj", "{0510ACF1-9A02-4622-938E-63FACFCE119E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{5B976CA6-2180-4362-A6D4-85E1021F817F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B976CA6-2180-4362-A6D4-85E1021F817F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B976CA6-2180-4362-A6D4-85E1021F817F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{232A9EF9-2691-48AD-A42B-51A5BCED048B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{232A9EF9-2691-48AD-A42B-51A5BCED048B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{232A9EF9-2691-48AD-A42B-51A5BCED048B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{232A9EF9-2691-48AD-A42B-51A5BCED048B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0510ACF1-9A02-4622-938E-63FACFCE119E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0510ACF1-9A02-4622-938E-63FACFCE119E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0510ACF1-9A02-4622-938E-63FACFCE119E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0510ACF1-9A02-4622-938E-63FACFCE119E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
