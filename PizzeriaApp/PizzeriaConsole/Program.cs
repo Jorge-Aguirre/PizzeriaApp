@@ -7,35 +7,46 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Linq;
+using BusinessDomain.Models;
+using System.Collections.Generic;
 
 namespace PizzeriaConsole
 {
     public class Program
     {
-        static ServiceProvider serviceProvider;
+        static readonly ServiceProvider serviceProvider = LoadDependencies();
+        static IEnumerable<Product> products;
+        static IEnumerable<Size> sizes;
 
         static void Main(string[] args)
         {
             LoadDependencies();
+            LoadData();
             Task simulation = Simulation();
             simulation.Wait();
 
             Console.ReadLine();
         }
 
-        static void LoadDependencies()
+        static ServiceProvider LoadDependencies()
         {
             IConfiguration config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", true, true)
                 .Build();
 
-            serviceProvider = new ServiceCollection()
+            return new ServiceCollection()
                 .AddSingleton(config)
                 .AddSingleton<PizzeriaDbContext>()
                 .AddSingleton<IProductRepository, ProductRepository>()
                 .AddSingleton<IProductService, ProductService>()
                 .BuildServiceProvider();
+        }
+
+        static void LoadData()
+        {
+            products = serviceProvider.GetService<IProductService>().GetProducts();
+            sizes = serviceProvider.GetService<ISizeService>().GetSizes();
         }
 
         static async Task Simulation()
@@ -62,20 +73,37 @@ namespace PizzeriaConsole
 
         static void ProcessOrders(int clients, int clientsCount)
         {
-            var products = serviceProvider.GetService<IProductService>().GetProducts();
-
             Random random = new Random();
             for (int i = 0; i < clients; i++)
             {
-                string clientName = "No." + (clientsCount + i);
+                Order order = new Order()
+                {
+                    Client = "No." + (clientsCount + i),
+                    Status = OrderState.RECEIVED,
+                    Products = new List<OrderProduct>()
+                };
+
                 int productsNumber = random.Next(1, 6);
 
-                Console.WriteLine("Client {0} order {1} products", clientName, productsNumber);
+                Console.WriteLine("Client {0} order {1} products", order.Client, productsNumber);
 
                 for (int j = 0; j< productsNumber; j++)
                 {
-                    int r = random.Next(products.Count());
-                    var product = products.ElementAt(r);
+                    int randomProductIndex = random.Next(products.Count());
+                    var product = products.ElementAt(randomProductIndex);
+                    int randomSizeIndex = random.Next(sizes.Count());
+                    var size = sizes.ElementAt(randomSizeIndex);
+
+                    order.Products.Add(new OrderProduct()
+                    {
+                        Product = product,
+                        State = State.INQUEUE,
+                        UnitPrice = 40, // For the moment the price is hardcoded
+                        Size = size,
+                        Portions = size.Portions, // By the moment portions will be fixed from size
+                        Quantity = 1,
+                        Order = order
+                    });
                 }
             }
         }

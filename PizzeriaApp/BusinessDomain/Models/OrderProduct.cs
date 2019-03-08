@@ -18,7 +18,7 @@
 
         public int SizeId { get; set; }
 
-        public int Size { get; set; }
+        public Size Size { get; set; }
 
         public int Portions { get; set; }
 
