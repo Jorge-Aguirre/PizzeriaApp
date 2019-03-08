@@ -56,8 +56,11 @@ namespace PizzeriaConsole
 
         static void LoadData()
         {
-            products = serviceProvider.GetService<IProductService>().GetProducts();
-            sizes = serviceProvider.GetService<ISizeService>().GetSizes();
+            lock (Lock)
+            {
+                products = serviceProvider.GetService<IProductService>().GetProducts();
+                sizes = serviceProvider.GetService<ISizeService>().GetSizes();
+            }
         }
 
         static async Task Simulation()
@@ -116,7 +119,11 @@ namespace PizzeriaConsole
                     });
                 }
 
-                serviceProvider.GetService<IOrderService>().Save(order);
+                lock(Lock)
+                {
+                    serviceProvider.GetService<IOrderService>().Save(order);
+                }
+
                 manager.ProcessOrder(order);
             }
         }
@@ -136,10 +143,10 @@ namespace PizzeriaConsole
             lock(Lock)
             {
                 serviceProvider.GetService<IOrderProductService>().UpdateOrderProduct(product);
-
-                Console.WriteLine("Product {0} is now in {1} state", product.Product.Name, product.State);
-                manager.ProcessProduct(product);
             }
+
+            Console.WriteLine("Product {0} is now in {1} state", product.Product.Name, product.State);
+            manager.ProcessProduct(product);
         }
     }
 }
