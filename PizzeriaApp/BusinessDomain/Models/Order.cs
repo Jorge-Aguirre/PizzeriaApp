@@ -8,8 +8,8 @@ namespace BusinessDomain.Models
 
         public string Client { get; set; }
 
-        public OrderState Status { get; set; }
+        public OrderState State { get; set; }
 
-        public ICollection<OrderProduct> Products { get; set; }
+        public ICollection<OrderProduct> OrderProducts { get; set; }
     }
 }

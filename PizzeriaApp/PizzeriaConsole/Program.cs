@@ -40,8 +40,10 @@ namespace PizzeriaConsole
                 .AddSingleton<PizzeriaDbContext>()
                 .AddSingleton<IProductRepository, ProductRepository>()
                 .AddSingleton<ISizeRepository, SizeRepository>()
+                .AddSingleton<IOrderRepository, OrderRepository>()
                 .AddSingleton<IProductService, ProductService>()
                 .AddSingleton<ISizeService, SizeService>()
+                .AddSingleton<IOrderService, OrderService>()
                 .BuildServiceProvider();
         }
 
@@ -81,8 +83,8 @@ namespace PizzeriaConsole
                 Order order = new Order()
                 {
                     Client = "No." + (clientsCount + i),
-                    Status = OrderState.RECEIVED,
-                    Products = new List<OrderProduct>()
+                    State = OrderState.RECEIVED,
+                    OrderProducts = new List<OrderProduct>()
                 };
 
                 int productsNumber = random.Next(1, 6);
@@ -96,19 +98,20 @@ namespace PizzeriaConsole
                     int randomSizeIndex = random.Next(sizes.Count());
                     var size = sizes.ElementAt(randomSizeIndex);
 
-                    order.Products.Add(new OrderProduct()
+                    order.OrderProducts.Add(new OrderProduct()
                     {
                         Product = product,
                         State = State.INQUEUE,
                         UnitPrice = 40, // For the moment the price is hardcoded
                         Size = size,
                         Portions = size.DefaultPortions, // By the moment portions will be fixed from size
-                        Quantity = 1,
-                        Order = order
+                        Quantity = 1
                     });
 
                     Console.WriteLine("{0} - {1}", product.Name, size.Name);
                 }
+
+                serviceProvider.GetService<IOrderService>().Save(order);
             }
         }
     }

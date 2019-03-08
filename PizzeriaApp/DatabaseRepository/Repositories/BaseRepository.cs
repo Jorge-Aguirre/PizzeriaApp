@@ -30,12 +30,16 @@ namespace DatabaseRepository.Repositories
         public void Save(T entity)
         {
             _dbSet.Add(entity);
+
+            _context.SaveChanges();
         }
 
         public void Update(T entity)
         {
             _dbSet.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
+
+            _context.SaveChanges();
         }
     }
 }
