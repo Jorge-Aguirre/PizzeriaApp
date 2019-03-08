@@ -27,8 +27,12 @@ namespace BusinessDomain.Logic
             }
         }
 
-        public void ProcessProduct(OrderProduct product)
+        public async Task ProcessProduct(OrderProduct product)
         {
+            Random random = new Random();
+            int randomTime = random.Next(5, 11); // Random times for steps process not defined in database
+            Task delay = Task.Delay(randomTime * 1000);
+            await delay;
             State newState = product.State;
 
             switch (product.State)

@@ -9,5 +9,7 @@
         public string Name { get; set; }
 
         public ProductType ProductType { get; set; }
+
+        public int CookTime { get; set; }
     }
 }

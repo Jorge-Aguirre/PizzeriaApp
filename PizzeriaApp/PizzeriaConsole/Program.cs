@@ -145,7 +145,7 @@ namespace PizzeriaConsole
                 serviceProvider.GetService<IOrderProductService>().UpdateOrderProduct(product);
             }
 
-            Console.WriteLine("Product {0} is now in {1} state", product.Product.Name, product.State);
+            Console.WriteLine("Product {0} is now in {1} state from client {2}", product.Product.Name, product.State, product.Order.Client);
             manager.ProcessProduct(product);
         }
     }
