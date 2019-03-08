@@ -15,7 +15,7 @@ namespace PizzeriaApp.Services
 
         public IEnumerable<Size> GetSizes()
         {
-            throw new System.NotImplementedException();
+            return _sizeRepository.GetAll();
         }
     }
 }

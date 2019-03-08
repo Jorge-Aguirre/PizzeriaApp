@@ -9,6 +9,7 @@ namespace DatabaseRepository.Context
         private readonly IConfiguration _configuration;
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<Size> Sizes { get; set; }
 
         public PizzeriaDbContext(IConfiguration configuration)
         {

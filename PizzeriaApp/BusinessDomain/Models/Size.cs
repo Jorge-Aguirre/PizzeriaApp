@@ -6,6 +6,6 @@
 
         public string Name { get; set; }
 
-        public int Portions { get; set; }
+        public int DefaultPortions { get; set; }
     }
 }
