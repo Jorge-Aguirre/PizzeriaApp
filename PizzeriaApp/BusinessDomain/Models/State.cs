@@ -2,12 +2,12 @@
 {
     public enum State
     {
-        INQUEUE,
-        PREPARING,
-        COOKING,
-        CUTING,
-        PACKAGING,
-        SENDING,
-        DELIVERED
+        INQUEUE = 1,
+        PREPARING = 2,
+        COOKING = 3,
+        CUTING = 4,
+        PACKAGING = 5,
+        SENDING = 6,
+        DELIVERED = 7
     }
 }

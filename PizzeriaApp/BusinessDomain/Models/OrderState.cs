@@ -2,8 +2,8 @@
 {
     public enum OrderState
     {
-        RECEIVED,
-        INPROGRESS,
-        DELIVERED
+        RECEIVED = 1,
+        INPROGRESS = 2,
+        DELIVERED = 3
     }
 }

@@ -9,14 +9,19 @@ using System.Threading.Tasks;
 using System.Linq;
 using BusinessDomain.Models;
 using System.Collections.Generic;
+using BusinessDomain.Logic;
 
 namespace PizzeriaConsole
 {
     public class Program
     {
+        static object Lock = new object();
+
         static readonly ServiceProvider serviceProvider = LoadDependencies();
         static IEnumerable<Product> products;
         static IEnumerable<Size> sizes;
+
+        static Manager manager = new Manager();
 
         static void Main(string[] args)
         {
@@ -41,9 +46,11 @@ namespace PizzeriaConsole
                 .AddSingleton<IProductRepository, ProductRepository>()
                 .AddSingleton<ISizeRepository, SizeRepository>()
                 .AddSingleton<IOrderRepository, OrderRepository>()
+                .AddSingleton<IOrderProductRepository, OrderProductRepository>()
                 .AddSingleton<IProductService, ProductService>()
                 .AddSingleton<ISizeService, SizeService>()
                 .AddSingleton<IOrderService, OrderService>()
+                .AddSingleton<IOrderProductService, OrderProductService>()
                 .BuildServiceProvider();
         }
 
@@ -55,6 +62,8 @@ namespace PizzeriaConsole
 
         static async Task Simulation()
         {
+            manager.NewOrderHandler += NewOrderArrived;
+            manager.PreparingProductHandler += ChangingProductState;
             Random random = new Random();
             Console.WriteLine("Pizzeria is now open: waiting for clients");
             int clientsCount = 0;
@@ -67,29 +76,27 @@ namespace PizzeriaConsole
                 Task delay = Task.Delay(seconds * 1000);
                 await delay;
                 Console.WriteLine("After {0} seconds {1} clients arrived, processing their orders.....",  seconds, clients);
-                clientsCount += clients;
 
-                ProcessOrders(clients, clientsCount);
+                ProcessOrders(manager, clients, clientsCount);
+                clientsCount += clients;
             }
 
             Console.WriteLine("Pizzeria is now closed");
         }
 
-        static void ProcessOrders(int clients, int clientsCount)
+        static void ProcessOrders(Manager manager, int clients, int clientsCount)
         {
             Random random = new Random();
             for (int i = 0; i < clients; i++)
             {
                 Order order = new Order()
                 {
-                    Client = "No." + (clientsCount + i),
+                    Client = "No." + (clientsCount + i + 1),
                     State = OrderState.RECEIVED,
                     OrderProducts = new List<OrderProduct>()
                 };
 
                 int productsNumber = random.Next(1, 6);
-
-                Console.WriteLine("Client {0} orders: ", order.Client);
 
                 for (int j = 0; j< productsNumber; j++)
                 {
@@ -107,11 +114,31 @@ namespace PizzeriaConsole
                         Portions = size.DefaultPortions, // By the moment portions will be fixed from size
                         Quantity = 1
                     });
-
-                    Console.WriteLine("{0} - {1}", product.Name, size.Name);
                 }
 
                 serviceProvider.GetService<IOrderService>().Save(order);
+                manager.ProcessOrder(order);
+            }
+        }
+
+        private static void NewOrderArrived(Order order)
+        {
+            Console.WriteLine("Client {0} orders: ", order.Client);
+
+            order.OrderProducts.ToList().ForEach(p =>
+            {
+                Console.WriteLine("Product {0} is {1} from client {2}", p.Product.Name, p.State, order.Client);
+            });
+        }
+
+        private static void ChangingProductState(OrderProduct product)
+        {
+            lock(Lock)
+            {
+                serviceProvider.GetService<IOrderProductService>().UpdateOrderProduct(product);
+
+                Console.WriteLine("Product {0} is now in {1} state", product.Product.Name, product.State);
+                manager.ProcessProduct(product);
             }
         }
     }
