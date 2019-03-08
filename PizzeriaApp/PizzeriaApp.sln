@@ -5,11 +5,14 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzeriaApp", "PizzeriaApp\PizzeriaApp.csproj", "{1EA7E07A-088B-4759-A091-D2CABF8D490F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessDomain", "BusinessDomain\BusinessDomain.csproj", "{5B976CA6-2180-4362-A6D4-85E1021F817F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "BusinessDomain\Domain.csproj", "{5B976CA6-2180-4362-A6D4-85E1021F817F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseRepository", "DatabaseRepository\DatabaseRepository.csproj", "{232A9EF9-2691-48AD-A42B-51A5BCED048B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzeriaConsole", "PizzeriaConsole\PizzeriaConsole.csproj", "{0510ACF1-9A02-4622-938E-63FACFCE119E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{232A9EF9-2691-48AD-A42B-51A5BCED048B} = {232A9EF9-2691-48AD-A42B-51A5BCED048B}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
