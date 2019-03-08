@@ -1,17 +1,41 @@
-﻿using System;
-using System.Diagnostics;
+﻿using DatabaseRepository.Context;
+using DatabaseRepository.Repositories;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using PizzeriaApp.Services;
+using System;
+using System.IO;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace PizzeriaConsole
 {
     public class Program
     {
+        static ServiceProvider serviceProvider;
+
         static void Main(string[] args)
         {
+            LoadDependencies();
             Task simulation = Simulation();
             simulation.Wait();
 
             Console.ReadLine();
+        }
+
+        static void LoadDependencies()
+        {
+            IConfiguration config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
+
+            serviceProvider = new ServiceCollection()
+                .AddSingleton(config)
+                .AddSingleton<PizzeriaDbContext>()
+                .AddSingleton<IProductRepository, ProductRepository>()
+                .AddSingleton<IProductService, ProductService>()
+                .BuildServiceProvider();
         }
 
         static async Task Simulation()
@@ -38,6 +62,8 @@ namespace PizzeriaConsole
 
         static void ProcessOrders(int clients, int clientsCount)
         {
+            var products = serviceProvider.GetService<IProductService>().GetProducts();
+
             Random random = new Random();
             for (int i = 0; i < clients; i++)
             {
@@ -45,6 +71,12 @@ namespace PizzeriaConsole
                 int productsNumber = random.Next(1, 6);
 
                 Console.WriteLine("Client {0} order {1} products", clientName, productsNumber);
+
+                for (int j = 0; j< productsNumber; j++)
+                {
+                    int r = random.Next(products.Count());
+                    var product = products.ElementAt(r);
+                }
             }
         }
     }
